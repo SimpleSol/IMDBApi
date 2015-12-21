@@ -1,5 +1,7 @@
 package com.example.leon.imdbapi.activity;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 import com.example.leon.imdbapi.R;
 import com.example.leon.imdbapi.api.ImdbApi;
 import com.example.leon.imdbapi.content.Movie;
+import com.example.leon.imdbapi.loader.ImdbLoader;
 import com.squareup.picasso.Picasso;
 
 import retrofit.Call;
@@ -19,9 +22,8 @@ import retrofit.Retrofit;
 /**
  * Created by Leon on 21.12.2015.
  */
-public class MovieCardActivity extends AppCompatActivity {
+public class MovieCardActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Call<Movie>> {
 
-    private static final String API = "http://www.omdbapi.com";
 
     private TextView mTitle;
     private TextView mYear;
@@ -45,18 +47,23 @@ public class MovieCardActivity extends AppCompatActivity {
         mPlot = (TextView) findViewById(R.id.plot);
         mPoster = (ImageView) findViewById(R.id.poster);
 
-        String title = getIntent().getStringExtra(MainActivity.MOVIE_TITLE);
+        Bundle bundle = new Bundle();
+        bundle.putString(MainActivity.MOVIE_TITLE, getIntent().getStringExtra(MainActivity.MOVIE_TITLE));
 
-        retrofitStaff(title);
+        getLoaderManager().initLoader(R.id.imdb_loader, bundle, this).forceLoad();
+
     }
 
-    private void retrofitStaff(String title) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ImdbApi imdbApi = retrofit.create(ImdbApi.class);
-        Call<Movie> call = imdbApi.getMovie(String.valueOf(title), "full");
+    @Override
+    public Loader<Call<Movie>> onCreateLoader(int id, Bundle args) {
+        if (R.id.imdb_loader == id) {
+            return new ImdbLoader(this, args.getString(MainActivity.MOVIE_TITLE));
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Call<Movie>> loader, Call<Movie> call) {
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Response<Movie> response, Retrofit retrofit) {
@@ -75,5 +82,11 @@ public class MovieCardActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Call<Movie>> loader) {
+
     }
 }
