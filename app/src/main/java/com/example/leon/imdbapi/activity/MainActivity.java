@@ -1,52 +1,36 @@
 package com.example.leon.imdbapi.activity;
 
-import android.app.Activity;
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.example.leon.imdbapi.BuildConfig;
 import com.example.leon.imdbapi.R;
-import com.example.leon.imdbapi.fragment.MainFragment;
 
-public class MainActivity extends Activity implements FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String MOVIE_TITLE = BuildConfig.APPLICATION_ID + ".MOVIE_TITLE";
+
+    private EditText mEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
-
-        if (savedInstanceState == null) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.frame, new MainFragment())
-                    .commit();
-        }
+        mEditText = (EditText) findViewById(R.id.edit_text);
+        Button mButton = (Button) findViewById(R.id.btn);
+        mButton.setOnClickListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (android.R.id.home == item.getItemId()) {
-            getFragmentManager().popBackStackImmediate();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        getFragmentManager().addOnBackStackChangedListener(this);
-    }
-
-    @Override
-    public void onBackStackChanged() {
-        if (getActionBar() != null) {
-            if (getFragmentManager().getBackStackEntryCount() > 0) {
-                getActionBar().setDisplayHomeAsUpEnabled(true);
-            } else {
-                getActionBar().setDisplayHomeAsUpEnabled(false);
-            }
-        }
+    public void onClick(View v) {
+        Intent intent = new Intent(this, MovieCardActivity.class);
+        intent.putExtra(MOVIE_TITLE, mEditText.getText().toString());
+        mEditText.setText("");
+        startActivity(intent);
     }
 }

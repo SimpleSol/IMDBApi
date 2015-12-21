@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">IMDBApi</string>
     <string name="action_settings">Settings</string>
-    <string name="enter_the_title">Enter the tittle of the movie</string>
+    <string name="enter_the_title">Enter the title of the movie</string>
     <string name="button_search">Search</string>
     <string name="movie_poster">Movie poster</string>
     <string name="field_title">Title:</string>
@@ -10,4 +10,5 @@
     <string name="field_actors">Actors:</string>
     <string name="field_imdb_rating">IMDB Rating:</string>
     <string name="field_plot">Plot:</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

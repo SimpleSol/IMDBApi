@@ -9,7 +9,7 @@ import retrofit.http.Query;
 /**
  * Created by Leon on 17.12.2015.
  */
-public interface IMDBApi {
+public interface ImdbApi {
 
     @GET("/")
     Call<Movie> getMovie(@Query("t") String movie, @Query("plot") String plot);
